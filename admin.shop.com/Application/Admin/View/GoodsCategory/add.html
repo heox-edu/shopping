@@ -1,0 +1,87 @@
+<extend name="Layout:Common" />
+<block name="main">
+<h1>
+    <span class="action-span"><a href="__GROUP__/Category/categoryList">商品分类</a></span>
+    <span class="action-span1"><a href="__GROUP__">ECSHOP 管理中心</a></span>
+    <span id="search_id" class="action-span1"> - 添加分类 </span>
+    <div style="clear:both"></div>
+</h1>
+<div class="main-div">
+    <form action="{:U('add')}" method="post" name="theForm" enctype="multipart/form-data">
+        <table width="100%" id="general-table">
+            <tr>
+                <td class="label">分类名称:</td>
+                <td>
+                    <input type='text' name='name' maxlength="20" value='{$row.name}' size='27' /> <font color="red">*</font>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">上级分类:</td>
+                <td>
+                    <input type="hidden" name="parent_id" id="parent_id"/>
+                    <input type="text" disabled="disabled" id="parent_name" value="{$row.}"/>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">排序:</td>
+                <td>
+                    <input type="text" name='sort'  value="{$row.sort}" size="15" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">是否显示:</td>
+                <td>
+                    <input type="radio" name="status" value="1"  checked="true"/> 是 
+                    <input type="radio" name="status" value="0"  /> 否
+                </td>
+            </tr>
+        </table>
+        <div class="button-div">
+            <input type="submit" value=" 确定 " />
+            <input type="reset" value=" 重置 " />
+        </div>
+    </form>
+</div>
+</block>
+<block name='css'>
+    <css href='__ZTREE__/css/zTreeStyle/zTreeStyle.css' />
+    <style type="text/css">
+        ul.ztree{
+            margin-top: 10px;
+            border: 1px solid #617775;
+            background: #f0f6e4;
+            width: 220px;
+            overflow-y: scroll;
+            overflow-x: auto;
+        }
+    </style>
+</block>
+<block name='js'>
+    <js href='__JS__/jquery.min.js'/>
+    <js href='__ZTREE__/js/jquery.ztree.core.min.js' />
+    <script type='text/javascript'>
+        var setting = {
+            data: {
+			simpleData: {
+				enable:true,
+				pIdKey: "parent_id",
+			}
+		},
+            callback:{
+                onClick:function(event,tree_id,tree_node){
+                    //获取点击节点的名字id,将名字放在input框中,将id放在隐藏域中
+                    $('#parent_name').val(tree_node.name);
+                    $('#parent_id').val(tree_node.id);
+                },
+            },
+        };
+        var zNodes={$categories};
+        $(function(){
+            //配置
+             var zTree_obj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);                
+            zTree_obj.expandAll(true);//默认展开全部
+        });
+        
+    </script>
+</block>
